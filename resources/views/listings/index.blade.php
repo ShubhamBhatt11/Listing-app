@@ -49,9 +49,16 @@
                     @foreach ($listings as $listing)
                         <a href="{{ route('listings.show', $listing) }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-lg transition">
                             <div class="p-6">
-                                <h3 class="font-semibold text-lg text-gray-800 mb-2 line-clamp-2">
-                                    {{ $listing->title }}
-                                </h3>
+                                <div class="flex items-start justify-between mb-3">
+                                    <h3 class="font-semibold text-lg text-gray-800 line-clamp-2 flex-1">
+                                        {{ $listing->title }}
+                                    </h3>
+                                    <span class="ml-2 px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap
+                        
+                                    ">
+                                        {{ ucfirst($listing->status) }}
+                                    </span>
+                                </div>
 
                                 <p class="text-gray-600 text-sm mb-3 line-clamp-3">
                                     {{ $listing->description }}

@@ -44,7 +44,7 @@
                                     <!-- Approve Form -->
                                     <form action="{{ route('admin.listings.approve', $listing) }}" method="POST" class="approve-form">
                                         @csrf
-                                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-gray px-4 py-2 rounded">
                                             Approve
                                         </button>
                                     </form>
@@ -62,7 +62,7 @@
                                                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                                                 @enderror
                                             </div>
-                                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded whitespace-nowrap">
+                                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-gray px-4 py-2 rounded whitespace-nowrap">
                                                 Reject
                                             </button>
                                         </div>

@@ -67,7 +67,7 @@
                         @endif
 
                         <div class="flex gap-4">
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">
+                            <button type="submit" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded">
                                 Update Listing
                             </button>
                             <a href="{{ route('dashboard') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded">

@@ -18,7 +18,8 @@ class ListingModerationController extends Controller
 
     public function index()
     {
-        $this->authorize('moderate', auth()->user());
+        // Authorize against the Listing class policy ability (policy method only needs the current user)
+        $this->authorize('moderate', \App\Models\Listing::class);
 
         $listings = Listing::where('status', 'pending')
             ->latest()
@@ -29,7 +30,7 @@ class ListingModerationController extends Controller
 
     public function approve(Listing $listing)
     {
-        $this->authorize('moderate', auth()->user());
+        $this->authorize('moderate', \App\Models\Listing::class);
 
         $this->service->approve(auth()->user(), $listing);
 
@@ -38,7 +39,7 @@ class ListingModerationController extends Controller
 
     public function reject(RejectListingRequest $request, Listing $listing)
     {
-        $this->authorize('moderate', auth()->user());
+        $this->authorize('moderate', \App\Models\Listing::class);
 
         $this->service->reject(auth()->user(), $listing, $request->rejection_reason);
 
