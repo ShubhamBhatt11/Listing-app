@@ -60,7 +60,7 @@
                         </div>
 
                         <div class="flex gap-4">
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-gray px-6 py-2 rounded">
                                 Create Listing
                             </button>
                             <a href="{{ route('dashboard') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded">

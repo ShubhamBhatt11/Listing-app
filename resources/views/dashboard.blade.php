@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Dashboard') }}
             </h2>
-            <a href="{{ route('listings.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+            <a href="{{ route('listings.create') }}" class="bg-blue-500 hover:bg-blue-600 text-gray px-4 py-2 rounded">
                 Create Listing
             </a>
         </div>

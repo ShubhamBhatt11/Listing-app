@@ -10,12 +10,19 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
+    $user = auth()->user();
+
+    if ($user && $user->isAdmin()) {
+        return view('admin.dashboard');
+    }
+
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Public listings
 Route::get('/listings', [ListingController::class, 'index'])->name('listings.index');
-Route::get('/listings/{listing}', [ListingController::class, 'show'])->name('listings.show');
+// Constrain to numbers so static routes like /listings/create aren't captured by the {listing} parameter
+Route::get('/listings/{listing}', [ListingController::class, 'show'])->whereNumber('listing')->name('listings.show');
 
 // Provider routes (authenticated + middleware)
 Route::middleware('auth')->group(function () {
