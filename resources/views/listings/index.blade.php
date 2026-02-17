@@ -53,11 +53,6 @@
                                     <h3 class="font-semibold text-lg text-gray-800 line-clamp-2 flex-1">
                                         {{ $listing->title }}
                                     </h3>
-                                    <span class="ml-2 px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap
-                        
-                                    ">
-                                        {{ ucfirst($listing->status) }}
-                                    </span>
                                 </div>
 
                                 <p class="text-gray-600 text-sm mb-3 line-clamp-3">
