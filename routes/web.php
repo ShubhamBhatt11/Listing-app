@@ -9,27 +9,23 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    $user = auth()->user();
-
-    if ($user && $user->isAdmin()) {
-        return view('admin.dashboard');
-    }
-
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [ListingController::class, 'dashboard'])
+    ->middleware(['auth', 'verified', 'provider'])
+    ->name('dashboard');
 
 // Public listings
 Route::get('/listings', [ListingController::class, 'index'])->name('listings.index');
 // Constrain to numbers so static routes like /listings/create aren't captured by the {listing} parameter
 Route::get('/listings/{listing}', [ListingController::class, 'show'])->whereNumber('listing')->name('listings.show');
 
-// Provider routes (authenticated + middleware)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+});
+
+// Provider routes
+Route::middleware(['auth', 'provider'])->group(function () {
     // Provider listing CRUD
     Route::get('/listings/create', [ListingController::class, 'create'])->name('listings.create');
     Route::post('/listings', [ListingController::class, 'store'])->name('listings.store');
@@ -38,7 +34,9 @@ Route::middleware('auth')->group(function () {
 });
 
 // Admin moderation routes
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [ListingModerationController::class, 'dashboard'])->name('dashboard');
+
     Route::get('/listings', [ListingModerationController::class, 'index'])->name('listings.index');
     Route::post('/listings/{listing}/approve', [ListingModerationController::class, 'approve'])->name('listings.approve');
     Route::post('/listings/{listing}/reject', [ListingModerationController::class, 'reject'])->name('listings.reject');

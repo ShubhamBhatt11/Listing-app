@@ -18,7 +18,7 @@
                 </div>
             @endif
 
-            @if (auth()->user()->listings()->count() == 0)
+            @if ($providerListings->isEmpty())
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         {{ __("You haven't created any listings yet. ") }}
@@ -40,7 +40,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (auth()->user()->listings as $listing)
+                                @foreach ($providerListings as $listing)
                                     <tr class="border-b hover:bg-gray-50">
                                         <td class="py-2 px-4">{{ $listing->title }}</td>
                                         <td class="py-2 px-4">{{ $listing->city }}</td>

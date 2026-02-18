@@ -49,6 +49,10 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],
+        "test:interview": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test tests/Unit/ListingServiceTest.php tests/Feature/ListingAccessTest.php"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"

@@ -14,15 +14,15 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-center">
-                    <div class="text-3xl font-bold text-blue-600">{{ \App\Models\Listing::where('status','approved')->count() }}</div>
+                    <div class="text-3xl font-bold text-blue-600">{{ $approvedCount }}</div>
                     <p class="text-gray-600 mt-2">Approved Listings</p>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-center">
-                    <div class="text-3xl font-bold text-yellow-600">{{ \App\Models\Listing::where('status','pending')->count() }}</div>
+                    <div class="text-3xl font-bold text-yellow-600">{{ $pendingCount }}</div>
                     <p class="text-gray-600 mt-2">Pending Review</p>
                 </div>
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-center">
-                    <div class="text-3xl font-bold text-gray-600">{{ \App\Models\User::count() }}</div>
+                    <div class="text-3xl font-bold text-gray-600">{{ $usersCount }}</div>
                     <p class="text-gray-600 mt-2">Total Users</p>
                 </div>
             </div>
@@ -30,10 +30,9 @@
             <div class="mt-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Pending Listings</h3>
-                    @php $pending = \App\Models\Listing::where('status','pending')->latest()->take(5)->get(); @endphp
-                    @if($pending->count())
+                    @if($pendingListings->count())
                         <ul class="space-y-4">
-                            @foreach($pending as $listing)
+                            @foreach($pendingListings as $listing)
                                 <li class="flex justify-between items-center">
                                     <div>
                                         <div class="font-semibold">{{ $listing->title }}</div>

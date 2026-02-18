@@ -17,31 +17,17 @@ class ListingController extends Controller
         $this->service = $service;
     }
 
+    public function dashboard()
+    {
+        $providerListings = $this->service->getProviderDashboardListings(auth()->user());
+
+        return view('dashboard', compact('providerListings'));
+    }
+
     // Public listing pages
     public function index()
     {
-        $query = Listing::approved();
-
-        if ($q = request('q')) {
-            $query->where(function ($x) use ($q) {
-                $x->where('title', 'like', "%$q%")
-                  ->orWhere('description', 'like', "%$q%");
-            });
-        }
-
-        if ($city = request('city')) {
-            $query->where('city', $city);
-        }
-
-        if (request('sort') === 'price_asc') {
-            $query->orderBy('price_cents');
-        } elseif (request('sort') === 'price_desc') {
-            $query->orderByDesc('price_cents');
-        } else {
-            $query->latest();
-        }
-
-        $listings = $query->paginate(10)->withQueryString();
+        $listings = $this->service->getPublicListings(request()->only(['q', 'city', 'sort']), 10);
 
         return view('listings.index', compact('listings'));
     }
@@ -61,6 +47,8 @@ class ListingController extends Controller
 
     public function store(StoreListingRequest $request)
     {
+        $this->authorize('create', Listing::class);
+
         $this->service->create(auth()->user(), $request->validated());
 
         return redirect()->route('dashboard')->with('success', 'Listing created successfully!');

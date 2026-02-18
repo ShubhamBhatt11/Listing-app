@@ -7,6 +7,11 @@ use App\Models\Listing;
 
 class ListingPolicy
 {
+    public function create(User $user)
+    {
+        return $user->isProvider();
+    }
+
     public function update(User $user, Listing $listing)
     {
         return $user->id === $listing->user_id;
