@@ -20,13 +20,13 @@ class StoreListingRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     
-    public function rules()
+    public function rules(): array
     {
         return [
-            'title'=>'required|max:120',
-            'description'=>'required|max:1000',
-            'city'=>'required|max:60',
-            'price_cents'=>'required|integer|min:0'
+            'title' => 'required|max:120',
+            'description' => 'required|max:1000',
+            'city' => 'required|max:60',
+            'price_cents' => 'required|integer|min:0',
         ];
     }
 

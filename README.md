@@ -1,202 +1,105 @@
-# Listings + Moderation
+# Listings + Moderation (Laravel + Blade + Vanilla JS + Tailwind)
 
-A Laravel server-rendered application that lets providers create listings and admins moderate them, with a public searchable listing page.
+Server-rendered Laravel monolith where providers create listings, admins moderate them, and the public can browse approved listings.
 
-## Stack
+## Tech choices
 
-- **Framework:** Laravel (Blade templates)
-- **CSS:** Tailwind CSS
-- **JavaScript:** Vanilla JS (progressive enhancement)
-- **Database:** SQLite / MySQL
-- **Testing:** PHPUnit
+- Laravel + Blade (no SPA)
+- Tailwind CSS
+- Vanilla JavaScript (progressive enhancement only)
 
-## Setup Instructions
+## Setup
 
-### 1. Install Dependencies
+1. Install dependencies
+   - `composer install`
+   - `npm install`
+2. Environment
+   - `cp .env.example .env`
+   - `php artisan key:generate`
+3. Database
+   - `php artisan migrate:fresh --seed`
+4. Frontend assets
+   - `npm run dev`
+5. Run app
+   - `php artisan serve`
 
-```bash
-cd d:\installations\xampp\htdocs\listings-app
-composer install
-npm install
-```
+## Seeded credentials
 
-### 2. Environment Setup
+- Admin
+  - Email: `admin@example.com`
+  - Password: `password`
+- Provider
+  - Email: `provider@example.com`
+  - Password: `password`
 
-```bash
-cp .env.example .env
-php artisan key:generate
-```
+Seeded listings: 15 total
+- approved: 9
+- pending: 4
+- rejected: 2
 
-### 3. Database Migration & Seeding
+## Route summary
 
-```bash
-php artisan migrate
-php artisan db:seed
-```
+- Public
+  - `GET /listings`
+  - `GET /listings/{listing}` (approved only)
+- Provider
+  - `GET /dashboard`
+  - `GET /listings/create`
+  - `POST /listings`
+  - `GET /listings/{listing}/edit`
+  - `PUT /listings/{listing}`
+- Admin
+  - `GET /admin/listings`
+  - `POST /admin/listings/{listing}/approve`
+  - `POST /admin/listings/{listing}/reject`
 
-### 4. Build Assets
+## JavaScript enhancements (progressive)
 
-```bash
-npm run dev
-```
+- `/listings`
+  - `q` auto-submit with 400ms debounce
+  - `city` and `sort` submit immediately on change
+  - Search button remains visible for no-JS fallback
+- `/admin/listings`
+  - Confirm on approve: "Approve this listing?"
+  - Confirm on reject: "Reject this listing with this reason?"
+  - No-JS fallback works via normal form submits
 
-### 5. Run Application
+## Run tests
 
-```bash
-php artisan serve
-```
+- Run all tests: `php artisan test`
+- Run interview-required 4 tests with one command: `composer test:interview`
+- Run only required Unit tests: `php artisan test tests/Unit/ListingServiceTest.php`
+- Run only required Feature tests: `php artisan test tests/Feature/ListingAccessTest.php`
+- Run exactly the 4 required tests by name filters:
+  - `php artisan test --filter test_create_listing_sets_status_pending_and_published_at_null`
+  - `php artisan test --filter test_approve_pending_sets_published_at_and_clears_rejection_reason`
+  - `php artisan test --filter test_public_listings_shows_only_approved`
+  - `php artisan test --filter test_provider_cannot_edit_another_users_listing`
 
----
+## Architecture notes
 
-## Seeded Credentials
+- Form Requests handle input validation:
+  - `StoreListingRequest`
+  - `UpdateListingRequest`
+  - `RejectListingRequest`
+- `ListingPolicy` enforces ownership/moderation authorization.
+- `ListingService` contains listing business rules (create/update/approve/reject).
+- Controllers are thin: authorize -> call service -> return response.
 
-### Admin Account
-- **Email:** `admin@example.com`
-- **Password:** `password`
+## Next steps (1–2 days)
 
-### Provider Account
-- **Email:** `provider@example.com`
-- **Password:** `password`
+- Add dedicated middleware tests for provider/admin route boundaries.
+- Add request-level and service-level tests for invalid moderation transitions.
+- Improve UX copy/empty states while keeping server-rendered flow.
 
----
+## Submission checklist
 
-## Features
-
-### Public Pages
-- **GET /listings** - Browse approved listings with search, filters, sorting (10 per page)
-- **GET /listings/{listing}** - View listing detail (only approved)
-
-### Provider Dashboard
-- **GET /dashboard** - View own listings (all statuses)
-- **GET /listings/create** - Create form
-- **POST /listings** - Store
-- **GET /listings/{listing}/edit** - Edit form
-- **PUT /listings/{listing}** - Update (resets to pending if previously approved/rejected)
-
-### Admin Moderation
-- **GET /admin/listings** - Pending listings
-- **POST /admin/listings/{listing}/approve** - Approve (sets published_at, clears rejection_reason)
-- **POST /admin/listings/{listing}/reject** - Reject (requires reason)
-
----
-
-## Business Logic (Service Layer)
-
-All logic in `app/Services/ListingService`:
-- Create: status=pending, published_at=null
-- Update: resets status to pending if previously approved/rejected
-- Approve: published_at=now(), rejection_reason=null
-- Reject: requires reason, keeps published_at=null
-
-Authorization via `app/Policies/ListingPolicy`:
-- Providers can only edit own listings
-- Admins can moderate all listings
-- Pending/rejected never publicly visible
-
----
-
-## JavaScript Enhancements (Progressive)
-
-**JS-1: Debounced Search Filters** (`/listings`)
-- Keyword (q): 400ms debounce
-- City: immediate submit
-- Sort: immediate submit
-
-**JS-2: Confirm Dialogs** (`/admin/listings`)
-- Approve: confirm dialog
-- Reject: confirm dialog + validates reason
-
-Both work without JavaScript (forms submit normally).
-
----
-
-## Tests
-
-```bash
-php artisan test --filter ListingTest
-```
-
-### Tests Included
-1. Service creates listing with status=pending & published_at=null
-2. Service approves listing, sets published_at & clears rejection_reason
-3. Public /listings shows only approved listings
-4. Provider cannot edit another user's listing (403)
-
----
-
-## Architecture
-
-**Why Form Requests?**
-- Centralized validation logic
-- Clean, consistent error handling
-- Move validation out of controllers
-
-**Why Service Layer?**
-- Single source of truth for business rules
-- Easy to test
-- Reusable across controllers
-
-**Why Policies?**
-- Clean authorization checks
-- Consistent with Laravel conventions
-- Easy to maintain
-
-**Thin Controllers**
-- Receive → Authorize → Call Service → Respond
-- No business logic
-- Easy to understand
-
----
-
-## Project Structure
-
-```
-app/Http/Controllers/
-  ├── ListingController.php (public + provider CRUD)
-  └── Admin/ListingModerationController.php
-
-app/Http/Requests/
-  ├── StoreListingRequest.php
-  ├── UpdateListingRequest.php
-  └── RejectListingRequest.php
-
-app/Models/
-  ├── Listing.php
-  └── User.php
-
-app/Policies/
-  └── ListingPolicy.php
-
-app/Services/
-  └── ListingService.php
-
-resources/views/
-  ├── listings/
-  │   ├── index.blade.php
-  │   ├── create.blade.php
-  │   ├── edit.blade.php
-  │   └── show.blade.php
-  ├── admin/listings/
-  │   └── index.blade.php
-  └── dashboard.blade.php
-
-tests/Feature/
-  └── ListingTest.php
-```
-
----
-
-## Next Steps (Extension Ideas)
-
-- Image uploads
-- Email notifications
-- Categories/subcategories
-- Expiration logic
-- User messaging
-- Admin dashboard/stats
-- Rate limiting
-- CSV export
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-"# Listing-app" 
-# Listing-app
+- Seeded admin + provider accounts included
+- Provider dashboard lists only provider-owned listings
+- Provider create/edit flows implemented with status reset rules
+- Public listing filters + pagination preserve query params
+- Public detail page returns 404 for non-approved listings
+- Admin pending list + approve/reject moderation routes implemented
+- Progressive enhancement JS implemented (debounce + confirm dialogs)
+- Required 4 tests implemented and runnable via `composer test:interview`
+- Architecture uses Form Requests + Policy + Service layer + thin controllers

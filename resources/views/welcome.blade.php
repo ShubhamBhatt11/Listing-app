@@ -30,9 +30,15 @@
                     <div class="flex flex-wrap gap-4 justify-center">
                         @auth
                             <!-- Authenticated users go to dashboard -->
-                            <a href="{{ route('dashboard') }}" class="bg-green-500 hover:bg-green-600 text-gray px-8 py-3 rounded-lg font-semibold">
-                                Go to Dashboard
-                            </a>
+                            @if (auth()->user()->isProvider())
+                                <a href="{{ route('dashboard') }}" class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-semibold">
+                                    Go to Dashboard
+                                </a>
+                            @else
+                                <a href="{{ route('admin.listings.index') }}" class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-semibold">
+                                    Moderate Listings
+                                </a>
+                            @endif
                         @else
                             <!-- Public users can browse listings -->
                             <a href="{{ route('listings.index') }}" class="bg-blue-500 hover:bg-blue-600 text-black px-8 py-3 rounded-lg font-semibold">
@@ -49,8 +55,7 @@
             <!-- Features Section -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Feature 1: For Everyone -->
-                 <!-- /listings -below tag should redirect to this url  -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg" onclick="window.location='{{ route('listings.index') }}'" style="cursor: pointer;">
+                <a href="{{ route('listings.index') }}" class="block bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md">
                     <div class="p-6">
                         <div class="text-3xl mb-4">🔍</div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Browse Listings</h3>
@@ -58,7 +63,7 @@
                             Search through approved listings. Filter by city, keyword, or sort by price. No account needed to browse!
                         </p>
                     </div>
-                </div>
+                </a>
 
                 <!-- Feature 2: For Providers -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">

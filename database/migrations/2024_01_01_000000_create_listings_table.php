@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -14,11 +13,17 @@ return new class extends Migration{
             $table->string('title',120);
             $table->text('description');
             $table->string('city',60);
-            $table->integer('price_cents');
-            $table->string('status');
-            $table->string('rejection_reason')->nullable();
+            $table->unsignedBigInteger('price_cents');
+            $table->enum('status',['pending','approved','rejected'])->default('pending');
+            $table->string('rejection_reason',255)->nullable();
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
+    }
+
+    public function down():void
+    {
+        Schema::dropIfExists('listings');
+
     }
 };

@@ -33,9 +33,11 @@ class ListingController extends Controller
             $query->where('city', $city);
         }
 
-        if (request('sort') === 'price_asc') {
+        $sort = request('sort', 'newest');
+
+        if ($sort === 'price_asc') {
             $query->orderBy('price_cents');
-        } elseif (request('sort') === 'price_desc') {
+        } elseif ($sort === 'price_desc') {
             $query->orderByDesc('price_cents');
         } else {
             $query->latest();
@@ -61,6 +63,8 @@ class ListingController extends Controller
 
     public function store(StoreListingRequest $request)
     {
+        $this->authorize('create', Listing::class);
+
         $this->service->create(auth()->user(), $request->validated());
 
         return redirect()->route('dashboard')->with('success', 'Listing created successfully!');

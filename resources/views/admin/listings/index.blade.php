@@ -57,7 +57,8 @@
                                                 <input type="text" name="rejection_reason" placeholder="Rejection reason (required)" 
                                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500 text-sm
                                                     @error('rejection_reason') border-red-500 @enderror"
-                                                    maxlength="255">
+                                                    maxlength="255"
+                                                    value="{{ old('rejection_reason') }}">
                                                 @error('rejection_reason')
                                                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                                                 @enderror

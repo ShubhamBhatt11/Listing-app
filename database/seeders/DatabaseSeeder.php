@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Listing;
@@ -14,9 +13,9 @@ class DatabaseSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-   public function run(): void
+    public function run(): void
     {
-        $admin = User::create([
+        User::create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
@@ -49,6 +48,13 @@ class DatabaseSeeder extends Seeder
             'status' => 'rejected',
             'published_at' => null,
             'rejection_reason' => 'Not acceptable',
+        ]);
+
+        Listing::factory()->count(3)->create([
+            'user_id' => $provider->id,
+            'status' => 'approved',
+            'published_at' => now(),
+            'rejection_reason' => null,
         ]);
     }
 }

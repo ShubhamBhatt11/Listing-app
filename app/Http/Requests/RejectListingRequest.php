@@ -19,11 +19,10 @@ class RejectListingRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-   
     public function rules(): array
     {
         return [
-            'rejection_reason'=>'required|max:255'
+            'rejection_reason' => 'required|max:255',
         ];
     }
 

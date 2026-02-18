@@ -1,35 +1,30 @@
 import './bootstrap';
 
-// Ensure DOM is ready before querying elements so auto-submit works
 document.addEventListener('DOMContentLoaded', () => {
-    // JS-1: Debounced auto-submit on public listing filters
-    let searchTimeout;
+    const filterForm = document.querySelector('[data-listings-filter-form]');
+    const qInput = document.querySelector('[data-filter-q]');
+    const cityInput = document.querySelector('[data-filter-city]');
+    const sortSelect = document.querySelector('[data-filter-sort]');
 
-    const qInput = document.querySelector('[name=q]');
-    const cityInput = document.querySelector('[name=city]');
-    const sortSelect = document.querySelector('[name=sort]');
+    if (filterForm && qInput) {
+        let searchTimeout;
 
-    if (qInput) {
-        const form = qInput.form;
-
-        // Debounced search on keyword input (400ms)
-        qInput.addEventListener('input', function() {
+        qInput.addEventListener('input', () => {
             clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => form.submit(), 400);
+            searchTimeout = setTimeout(() => filterForm.submit(), 400);
         });
 
-        // Immediate submit on city/sort changes
         if (cityInput) {
-            cityInput.addEventListener('change', () => form.submit());
+            cityInput.addEventListener('change', () => filterForm.submit());
         }
+
         if (sortSelect) {
-            sortSelect.addEventListener('change', () => form.submit());
+            sortSelect.addEventListener('change', () => filterForm.submit());
         }
     }
 
-    // JS-2: Confirm dialogs for admin moderation actions
     document.querySelectorAll('.approve-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', (e) => {
             if (!confirm('Approve this listing?')) {
                 e.preventDefault();
             }
@@ -37,14 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.querySelectorAll('.reject-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', (e) => {
             const reason = form.querySelector('input[name=rejection_reason]')?.value.trim();
             if (!reason) {
-                e.preventDefault();
-                alert('Please provide a rejection reason');
                 return;
             }
-            if (!confirm('Reject this listing with the provided reason?')) {
+
+            if (!confirm('Reject this listing with this reason?')) {
                 e.preventDefault();
             }
         });
