@@ -75,6 +75,10 @@
                         </table>
                     </div>
                 </div>
+
+                <div class="mt-6">
+                    {{ $providerListings->links() }}
+                </div>
             @endif
         </div>
     </div>
