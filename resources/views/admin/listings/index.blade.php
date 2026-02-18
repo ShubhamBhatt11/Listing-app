@@ -13,6 +13,12 @@
                 </div>
             @endif
 
+            @if ($errors->has('rejection_reason') || $errors->has('listings'))
+                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                    {{ $errors->first('rejection_reason') ?: $errors->first('listings') }}
+                </div>
+            @endif
+
             @if ($listings->count() > 0)
                 <div class="space-y-6">
                     @foreach ($listings as $listing)
@@ -52,7 +58,7 @@
                                     <!-- Reject Form -->
                                     <form action="{{ route('admin.listings.reject', $listing) }}" method="POST" class="reject-form" style="flex: 1;">
                                         @csrf
-                                        <div class="flex gap-2 items-end">
+                                        <div class="flex gap-2 items-start">
                                             <div class="flex-1">
                                                 <input type="text" name="rejection_reason" placeholder="Rejection reason (required)" 
                                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500 text-sm
@@ -61,9 +67,11 @@
                                                     value="{{ old('rejection_reason') }}">
                                                 @error('rejection_reason')
                                                     <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                                                @else
+                                                    <p class="text-xs mt-1 invisible" aria-hidden="true">&nbsp;</p>
                                                 @enderror
                                             </div>
-                                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-gray px-4 py-2 rounded whitespace-nowrap">
+                                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-gray px-4 py-2 rounded whitespace-nowrap self-start">
                                                 Reject
                                             </button>
                                         </div>

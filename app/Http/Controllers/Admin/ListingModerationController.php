@@ -16,14 +16,19 @@ class ListingModerationController extends Controller
         $this->service = $service;
     }
 
+    public function dashboard()
+    {
+        $this->authorize('moderate', \App\Models\Listing::class);
+
+        return view('admin.dashboard', $this->service->getAdminDashboardData());
+    }
+
     public function index()
     {
         // Authorize against the Listing class policy ability (policy method only needs the current user)
         $this->authorize('moderate', \App\Models\Listing::class);
 
-        $listings = Listing::where('status', 'pending')
-            ->latest()
-            ->paginate(10);
+        $listings = $this->service->getPendingListingsForModeration(10);
 
         return view('admin.listings.index', compact('listings'));
     }

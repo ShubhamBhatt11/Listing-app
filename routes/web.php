@@ -9,9 +9,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified', 'provider'])->name('dashboard');
+Route::get('/dashboard', [ListingController::class, 'dashboard'])
+    ->middleware(['auth', 'verified', 'provider'])
+    ->name('dashboard');
 
 // Public listings
 Route::get('/listings', [ListingController::class, 'index'])->name('listings.index');
@@ -35,9 +35,7 @@ Route::middleware(['auth', 'provider'])->group(function () {
 
 // Admin moderation routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [ListingModerationController::class, 'dashboard'])->name('dashboard');
 
     Route::get('/listings', [ListingModerationController::class, 'index'])->name('listings.index');
     Route::post('/listings/{listing}/approve', [ListingModerationController::class, 'approve'])->name('listings.approve');

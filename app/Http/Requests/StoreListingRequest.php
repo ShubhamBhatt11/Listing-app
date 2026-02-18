@@ -26,7 +26,7 @@ class StoreListingRequest extends FormRequest
             'title' => 'required|max:120',
             'description' => 'required|max:1000',
             'city' => 'required|max:60',
-            'price_cents' => 'required|integer|min:0',
+            'price_cents' => 'required|integer|min:0|max:4294967295',
         ];
     }
 
