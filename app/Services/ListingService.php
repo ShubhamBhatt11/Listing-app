@@ -6,13 +6,12 @@ use App\Models\Listing;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 
 class ListingService
 {
-    public function getProviderDashboardListings(User $provider): Collection
+    public function getProviderDashboardListings(User $provider, int $perPage = 10): LengthAwarePaginator
     {
-        return $provider->listings()->latest()->get();
+        return $provider->listings()->latest()->paginate($perPage);
     }
 
     public function getPublicListings(array $filters, int $perPage = 10): LengthAwarePaginator
